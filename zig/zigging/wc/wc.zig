@@ -10,7 +10,7 @@ const Flag:type = enum {
     words,
 };
 
-//TODO: process the configs into intructions in a way that isn't retarded.
+//todo: process the configs into intructions in a way that isn't retarded.
 const Config:type = struct {
     help:bool  = false,
     lines:bool = false,
