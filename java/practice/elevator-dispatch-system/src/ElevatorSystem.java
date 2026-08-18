@@ -5,9 +5,17 @@ class ElevatorSystem {
     List<Elevator> elevators;
     List<Floor> floors;
 
-    ElevatorSystem() {
+    ElevatorSystem(int elevatorNum, int floorNum) {
         elevators = new ArrayList<>();
         floors = new ArrayList<>();
+        for (int i = 0; i < elevatorNum; i++) {
+            elevators.add(new Elevator((char)('A'+1)));
+            System.out.println("Elevator " + elevators.get(i).getName() + " created.");
+        }
+        for (int i = 0; i < floorNum; i++) {
+            floors.add(new Floor(i+1));
+            System.out.println("Floor number " + floors.get(i).getNumber() + " created.");
+        }
     }
 
     void begin() {

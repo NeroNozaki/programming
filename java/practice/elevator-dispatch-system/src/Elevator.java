@@ -7,9 +7,17 @@ public class Elevator {
         IDLE,
         DOWN,
     }
-    String name;
+    char name;
     int position;
     Direction direction;
     List<Integer> destinations = new ArrayList<>();
+
+    Elevator(char name) {
+        this.name = name;
+    }
+
+    char getName() {
+        return this.name;
+    }
 }
 
