@@ -1,5 +1,3 @@
-package aula6;
-
 public class Aluno {
     String nome;
     int matricula;
