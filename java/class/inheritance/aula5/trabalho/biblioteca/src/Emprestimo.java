@@ -1,34 +1,34 @@
-package library;
+package biblioteca;
 
 public class Emprestimo {
     static private int global_id = 1;
-    private int data_de_emprestimo;
-    private int data_de_dev;
+    private int emprestimoData;
+    private int devData;
     private int id;
     private Livro livro;
     private Membro membro;
     private boolean ativo = true;
     private double taxaDev = 5.0;
 
-    Emprestimo(Membro membro, Livro livro, int data_de_emprestimo) {
-        if (membro.getLivros() >= membro.categoria.getMaxLivros() || livro.quantidade_disponivel <= 0) {
+    Emprestimo(Membro membro, Livro livro, int emprestimoData) {
+        if (membro.getEmprestimo().length >= membro.getCategoria().getLivrosMax() || livro.quantidade_disponivel <= 0) {
             System.err.println("emprestimo nao pode ser feito");
             return;
         }
 
         this.membro = membro;
         this.livro = livro;
-        this.data_de_emprestimo = data_de_emprestimo;
-        this.data_de_dev = data_de_emprestimo + membro.categoria.prazo_maximo;
+        this.emprestimoData = emprestimoData;
+        this.devData = emprestimoData + membro.getCategoria().getPrazoMax();
     }
 
     void renovarEmprestimo(Membro membro) {
-        if (!membro.categoria.pode_renovar) {
+        if (!membro.getCategoria().getPodeRenovar()) {
             System.err.println("nao pode renovar");
             return;
         }
-        if (data_de_dev >= data_de_emprestimo) {
-            data_de_dev += 7;
+        if (devData >= emprestimoData) {
+            devData += 7;
         }
     }
 
@@ -48,6 +48,6 @@ public class Emprestimo {
                 break;
         }
 
-        this.taxaDev = this.taxaDev * discount * membro.categoria.discount;
+        this.taxaDev = this.taxaDev * discount * membro.getCategoria().getDesconto();
     }
 }
