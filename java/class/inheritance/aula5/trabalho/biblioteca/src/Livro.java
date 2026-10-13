@@ -1,5 +1,7 @@
 package biblioteca;
 
+import com.sun.nio.sctp.IllegalUnbindException;
+
 class Livro {
     private final String titulo;
     private final String autor;
@@ -7,6 +9,9 @@ class Livro {
     private int quantidadeDisponivel;
 
     Livro(String titulo, String autor, int quantidadeTotal) {
+        if (quantidadeTotal <= 0) {
+            throw new IllegalArgumentException("quantidade do livro nao pode ser menor que 1.");
+        }
         this.titulo = titulo;
         this.autor = autor;
         this.quantidadeTotal = quantidadeTotal;

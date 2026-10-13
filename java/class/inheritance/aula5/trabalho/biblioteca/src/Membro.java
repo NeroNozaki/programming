@@ -35,9 +35,6 @@ public class Membro {
         }
     }
 
-    Categoria getCategoria() { return categoria; }
-    ArrayList<Emprestimo> getEmprestimos() { return emprestimos; }
-    String getNome() { return nome; }
     void adicionarEmprestimo(Emprestimo emprestimo) {
         emprestimos.add(emprestimo);
     }
@@ -45,5 +42,14 @@ public class Membro {
     void removerEmprestimo(Emprestimo emprestimo) {
         emprestimos.remove(emprestimo);
         histEmprestimos.add(emprestimo);
+    }
+
+    Categoria getCategoria() { return categoria; }
+    ArrayList<Emprestimo> getEmprestimos() { return emprestimos; }
+    String getNome() { return nome; }
+    boolean temMulta(LocalDate dataAtual) {
+        for (Emprestimo emprestimo : emprestimos) {
+            if (emprestimo.getMulta(dataAtual) != 0) return true;
+        }
     }
 }

@@ -10,7 +10,7 @@ public class Emprestimo {
     private Livro livro;
     private Membro membro;
     private boolean ativo = true;
-    private double taxaRenov = 5.0;
+    private final double taxaRenov = 5.0;
 
     Emprestimo(Membro membro, Livro livro, LocalDate emprestimoData) {
         if (membro.getEmprestimos().size() >= membro.getCategoria().getLivrosMax() || livro.getQuantidadeDisponivel() <= 0) {
@@ -25,19 +25,20 @@ public class Emprestimo {
     }
 
     boolean renovar(LocalDate dataAtual) {
+        if (!ativo) return false;
         if (!this.membro.getCategoria().getPodeRenovar()) {
             System.err.println("nao pode renovar");
             return false;
         }
-        if (!dataAtual.isAfter(devData)) {
-            devData = devData.plusDays(7);
-        }
+        if (dataAtual.isAfter(devData)) return false;
+
+        devData = devData.plusDays(7);
         return true;
     }
 
     void renovar(LocalDate dataAtual, String cupom) {
         boolean result = renovar(dataAtual);
-        if (result) return;
+        if (!result) return;
 
         double desconto;
 
@@ -52,13 +53,16 @@ public class Emprestimo {
                 desconto = 1;
                 break;
         }
-
-        this.taxaRenov = this.taxaRenov * desconto;
+        double valorAPagar = this.taxaRenov * desconto;
     }
 
     void finalizar() {
         this.ativo = false;
-        membro.adicionarHistEmprestimos(this);
+    }
+
+    double getMulta(LocalDate dataAtual) {
+        long diasAtraso = Math.max(0, ChronoUnit.DAYS.between(devData, dataAtual));
+        return membro.getCategoria().calcularMulta(diasAtraso, membro.getCategoria().getDescontoMulta());
     }
 
     int getId() { return id; }

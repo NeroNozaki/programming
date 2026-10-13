@@ -1,10 +1,9 @@
-
 package biblioteca;
 
 abstract class Categoria {
     private final int livrosMax;
     private final int prazoMax;
-    private final double multa;
+    private final double valorMulta;
     private final double descontoMulta;
     private final boolean podeRenovar;
 
@@ -12,22 +11,22 @@ abstract class Categoria {
               double desconto, boolean podeRenovar) {
         this.livrosMax = livrosMax;
         this.prazoMax = prazoMax;
-        this.multa = multa;
+        this.valorMulta = multa;
         this.descontoMulta = desconto;
         this.podeRenovar = podeRenovar;
     }
 
     int getLivrosMax() { return livrosMax; }
     int getPrazoMax() { return prazoMax; }
-    double getMulta() { return multa; }
+    double getValorMulta() { return valorMulta; }
     double getDescontoMulta() { return descontoMulta; }
     boolean getPodeRenovar() { return podeRenovar; }
 
-    double calcularMulta(int diasAtraso) {
-        return Math.max(0, diasAtraso) * multa * descontoMulta;
+    double calcularMulta(long diasAtraso) {
+        return Math.max(0, diasAtraso) * valorMulta * descontoMulta;
     }
 
-    double calcularMulta(int diasAtraso, double descontoAdicional) {
+    double calcularMulta(long diasAtraso, double descontoAdicional) {
         return calcularMulta(diasAtraso)
             * (1 - descontoAdicional / 100);
     }
