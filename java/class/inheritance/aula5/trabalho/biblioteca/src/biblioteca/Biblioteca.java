@@ -53,23 +53,24 @@ public class Biblioteca {
         membro.adicionarEmprestimo(emprestimo);
     }
 
-    void devolverLivro(Membro membro, Emprestimo emprestimo) {
-        checarDevolucao(membro, emprestimo);
-        receberLivro(membro, emprestimo);
+    void devolverLivro(Emprestimo emprestimo) {
+        checarDevolucao(emprestimo);
+        receberLivro(emprestimo);
     }
 
-    void pagarMulta(Membro membro, Emprestimo emprestimo) {
-        checarMulta(membro, emprestimo);
+    void pagarMulta(Emprestimo emprestimo) {
+        checarMulta(emprestimo);
 
         totalMultas += emprestimo.getMulta();
-        System.out.print("multa foi paga e ");
-        receberLivro(membro, emprestimo);
+        System.out.print("Multa de " + emprestimo.getMulta() + " foi paga e ");
+        receberLivro(emprestimo);
     }
 
     void renovarEmprestimo(Emprestimo emprestimo){
         if (!emprestimos.contains(emprestimo)) {
             throw new IllegalArgumentException("emprestimo nao existe");
         }
+
         emprestimo.calcularTaxaRenovacao();
         emprestimo.renovar(dataAtual);
     }
@@ -83,7 +84,7 @@ public class Biblioteca {
     }
 
     LocalDate getDataAtual() { return dataAtual; }
-    HashMap<String, Integer> getNumMembros() {
+    private HashMap<String, Integer> getNumMembros() {
         HashMap<String, Integer> membrosPorCategoria = new HashMap<>();
         int padrao = 0;
         int premium = 0;
@@ -111,6 +112,14 @@ public class Biblioteca {
         return membrosPorCategoria;
     }
 
+    void printMembros() {
+        HashMap<String, Integer> membros = getNumMembros();
+        System.out.print("Padrao: " + membros.get("padrao"));
+        System.out.print(", Premium: " + membros.get("premium"));
+        System.out.print(", VIP: " + membros.get("vip"));
+        System.out.println();
+    }
+
     int getNumEmprestimosAtivos() {
         int emprestimosAtivos = 0;
         for (Emprestimo emprestimo : emprestimos) {
@@ -129,15 +138,19 @@ public class Biblioteca {
 
     double getTotalMultas() { return totalMultas; }
 
-    private void receberLivro(Membro membro, Emprestimo emprestimo) {
+    private void receberLivro(Emprestimo emprestimo) {
+        Membro membro = emprestimo.getMembro();
+
         emprestimo.getLivro().devolverCopia();
         emprestimo.finalizar();
         membro.removerEmprestimo(emprestimo);
         emprestimos.remove(emprestimo);
-        System.out.println("livro " + emprestimo.getLivro().getTitulo() + " foi devolvido");
+        System.out.println("Livro " + emprestimo.getLivro().getTitulo() + " foi devolvido!");
     }
 
-    private void checarDevolucao(Membro membro, Emprestimo emprestimo) {
+    private void checarDevolucao(Emprestimo emprestimo) {
+        Membro membro = emprestimo.getMembro();
+
         checarMembro(membro);
         if (membro.temMulta()) {
             throw new IllegalArgumentException("nao pode devolver nenhum livro enquanto voce tem um emprestimo atrasado.");
@@ -153,7 +166,9 @@ public class Biblioteca {
         }
     }
 
-    private void checarMulta(Membro membro, Emprestimo emprestimo) {
+    private void checarMulta(Emprestimo emprestimo) {
+        Membro membro = emprestimo.getMembro();
+
         checarMembro(membro);
         if (!emprestimos.contains(emprestimo)) {
             throw new IllegalArgumentException("emprestimo nao existe.");

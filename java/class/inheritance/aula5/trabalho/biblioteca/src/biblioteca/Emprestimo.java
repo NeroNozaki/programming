@@ -30,7 +30,7 @@ public class Emprestimo {
         this.exibir();
     }
 
-    boolean podeRenovar(LocalDate dataAtual) {
+    private boolean podeRenovar(LocalDate dataAtual) {
         if (!ativo){
             System.err.println("nao pode renovar um emprestimo inativo.");
             return false;
@@ -46,11 +46,15 @@ public class Emprestimo {
         return true;
     }
     void renovar(LocalDate dataAtual) {
+        System.out.println();
         if (podeRenovar(dataAtual)) {
             devData = devData.plusDays(7);
-            System.out.println("nova data de devolucao: " + devData);
+            System.out.println("Renovacao feita!");
+            System.out.println("Nova data de devolucao: " + devData);
         }
-        else System.err.println("renovacao invalida.");
+        else {
+            throw new IllegalStateException();
+        }
     }
 
     double calcularTaxaRenovacao() {
@@ -72,8 +76,9 @@ public class Emprestimo {
                 break;
         }
 
-        System.out.println("taxa de renovacao com cupom " + cupom + ": R$ " + calcularTaxaRenovacao(cupom));
-        return this.taxaRenov * desconto;
+        double taxa = this.taxaRenov * desconto;
+        System.out.println("taxa de renovacao com cupom " + cupom + ": R$ " + taxa);
+        return taxa;
     }
 
     void finalizar() { this.ativo = false; }
@@ -83,6 +88,9 @@ public class Emprestimo {
     }
     double getMulta() {
         return membro.getCategoria().calcularMulta(diasAtraso);
+    }
+    double getMulta(int desconto) {
+        return membro.getCategoria().calcularMulta(diasAtraso, desconto);
     }
 
     int getId() { return id; }
@@ -94,12 +102,14 @@ public class Emprestimo {
     }
 
     void exibir() {
+        System.out.println();
         System.out.println("ID: " + id);
         System.out.println("Livro: " + livro.getTitulo() + " de " + livro.getAutor());
         System.out.println("Membro: " + membro.getNome());
         System.out.println("Data de emprestimo: " + emprestimoData);
         System.out.println("Data de devolucao: " + devData);
         System.out.println("Dias de atraso: " + diasAtraso);
-        System.out.println("Multa atual: " + getMulta());
+        System.out.println("Multa atual: R$ " + getMulta());
+        System.out.println();
     }
 }

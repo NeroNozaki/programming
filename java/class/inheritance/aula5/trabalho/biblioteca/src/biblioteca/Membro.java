@@ -52,6 +52,23 @@ public class Membro {
         }
         throw new IllegalArgumentException("este livro nao foi emprestado.");
     }
+
+    void printEmprestimos() {
+        System.out.println("Emprestimos atuais: ");
+        for (Emprestimo emprestimo : emprestimos) {
+            System.out.println(emprestimo.getLivro().getTitulo());
+        }
+    }
+
+    void printHistEmprestimos() {
+        ArrayList<Emprestimo> emprestimos = getHistEmprestimos();
+
+        System.out.println("Ultimos emprestimos: ");
+        for (Emprestimo emprestimo : emprestimos) {
+            System.out.println(emprestimo.getLivro().getTitulo());
+        }
+    }
+
     Categoria getCategoria() { return categoria; }
     boolean podeFazerEmprestimo() {
         return emprestimos.size() < categoria.getLivrosMax();
@@ -95,7 +112,7 @@ public class Membro {
         }
         return livros;
     }
-    ArrayList<Emprestimo> getHistEmprestimos() {
+    private ArrayList<Emprestimo> getHistEmprestimos() {
         ArrayList<Emprestimo> ultimosEmprestimos = new ArrayList<>();
         int inicio = Math.max(0, histEmprestimos.size() - 3);
 
