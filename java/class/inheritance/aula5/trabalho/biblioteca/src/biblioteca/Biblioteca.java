@@ -158,12 +158,6 @@ public class Biblioteca {
         if (!emprestimo.isAtivo()) {
             throw new IllegalArgumentException("este emprestimo nao esta ativo.");
         }
-        if (emprestimo.getMembro() != membro) {
-            throw new IllegalArgumentException("este emprestimo nao pertence a este membro.");
-        }
-        if (!membro.temEmprestimo(emprestimo)) {
-            throw new IllegalArgumentException("esse livro nao esta pendente para devolucao ou nao existe.");
-        }
     }
 
     private void checarMulta(Emprestimo emprestimo) {
