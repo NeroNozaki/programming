@@ -42,6 +42,11 @@ final class Padrao extends Categoria {
             false //podeRenovar
         );
     }
+
+    @Override
+    public String toString() {
+        return "Padrao";
+    }
 }
 
 final class Premium extends Categoria {
@@ -54,6 +59,11 @@ final class Premium extends Categoria {
             true  //podeRenovar
         );
     }
+
+    @Override
+    public String toString() {
+        return "Premium";
+    }
 }
 
 final class VIP extends Categoria {
@@ -65,5 +75,10 @@ final class VIP extends Categoria {
             0.8,  //descontoMulta
             true  //podeRenovar
         );
+    }
+
+    @Override
+    public String toString() {
+        return "VIP";
     }
 }

@@ -37,20 +37,27 @@ public class Membro {
 
     void adicionarEmprestimo(Emprestimo emprestimo) {
         emprestimos.add(emprestimo);
+        histEmprestimos.add(emprestimo);
     }
 
     void removerEmprestimo(Emprestimo emprestimo) {
         emprestimos.remove(emprestimo);
-        histEmprestimos.add(emprestimo);
     }
 
     Categoria getCategoria() { return categoria; }
-    ArrayList<Emprestimo> getEmprestimos() { return emprestimos; }
+    boolean podeFazerEmprestimo() {
+        return emprestimos.size() >= categoria.getLivrosMax();
+    }
     String getNome() { return nome; }
-    boolean temMulta(LocalDate dataAtual) {
+    double getMultaTotal() {
+        double multaTotal = 0;
         for (Emprestimo emprestimo : emprestimos) {
-            if (emprestimo.getMulta(dataAtual) != 0) return true;
+            multaTotal += emprestimo.getMulta();
         }
+        return multaTotal;
+    }
+    boolean temMulta() {
+        if (getMultaTotal() >= 0) return true;
         return false;
     }
 
@@ -59,5 +66,41 @@ public class Membro {
             if (emp.getId() == emprestimo.getId()) return true;
         }
         return false;
+    }
+
+    int getNumAtrasos() {
+        int atrasos = 0;
+        for (Emprestimo emprestimo : emprestimos) {
+            if (emprestimo.getDiasAtraso() > 0) {
+                atrasos++;
+            }
+        }
+        return atrasos;
+    }
+    int getNumEmprestimos() { return emprestimos.size(); }
+    ArrayList<Livro> getAtrasos() {
+        ArrayList<Livro> livros = new ArrayList<>();
+        for (Emprestimo emprestimo : emprestimos) {
+            livros.add(emprestimo.getLivro());
+        }
+        return livros;
+    }
+    ArrayList<Emprestimo> getHistEmprestimos() {
+        ArrayList<Emprestimo> ultimosEmprestimos = new ArrayList<>();
+        int inicio = Math.max(0, histEmprestimos.size() - 3);
+
+        for (int i = histEmprestimos.size() - 1; i >= inicio; i--) {
+            ultimosEmprestimos.add(histEmprestimos.get(i));
+        }
+        return ultimosEmprestimos;
+    }
+
+    void resumo() {
+        System.out.println("Nome: " + nome);
+        System.out.println("Email: " + email);
+        System.out.println("Categoria: " + categoria);
+        System.out.println("Quantidade de emprestimos: " + emprestimos.size());
+        System.out.println("Multa: " + getMultaTotal());
+        System.out.println("Numero de atrasos: " + getNumAtrasos());
     }
 }

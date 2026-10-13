@@ -1,7 +1,5 @@
 package biblioteca;
 
-import com.sun.nio.sctp.IllegalUnbindException;
-
 class Livro {
     private final String titulo;
     private final String autor;
