@@ -4,22 +4,22 @@ public class Emprestimo {
     static private int global_id = 1;
     private int emprestimoData;
     private int devData;
-    private int id;
+    private final int id;
     private Livro livro;
     private Membro membro;
     private boolean ativo = true;
     private double taxaDev = 5.0;
 
     Emprestimo(Membro membro, Livro livro, int emprestimoData) {
-        if (membro.getEmprestimo().length >= membro.getCategoria().getLivrosMax() || livro.quantidade_disponivel <= 0) {
-            System.err.println("emprestimo nao pode ser feito");
-            return;
+        if (membro.getEmprestimos().size() >= membro.getCategoria().getLivrosMax() || livro.getQuantidadeDisponivel() <= 0) {
+            throw new IllegalArgumentException("emprestimo nao pode ser feito");
         }
 
         this.membro = membro;
         this.livro = livro;
         this.emprestimoData = emprestimoData;
         this.devData = emprestimoData + membro.getCategoria().getPrazoMax();
+        this.id = global_id++;
     }
 
     void renovarEmprestimo(Membro membro) {
@@ -35,19 +35,20 @@ public class Emprestimo {
     void renovarEmprestimo(Membro membro, String cupom) {
         renovarEmprestimo(membro);
 
-        double discount;
+        double desconto;
 
         switch (cupom) {
             case "LEITOR10":
-                discount = 0.9;
+                desconto = 0.9;
                 break;
             case "RENOVACAO20":
-                discount = 0.8;
+                desconto = 0.8;
                 break;
             default:
+                desconto = 1;
                 break;
         }
 
-        this.taxaDev = this.taxaDev * discount * membro.getCategoria().getDesconto();
+        this.taxaDev = this.taxaDev * desconto * membro.getCategoria().getDesconto();
     }
 }

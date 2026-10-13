@@ -1,37 +1,52 @@
+
 package biblioteca;
 
 abstract class Categoria {
-    int livrosMax;
-    int prazoMax;
-    double multa;
-    double desconto = 1;
-    boolean podeRenovar;
+    private final int livrosMax;
+    private final int prazoMax;
+    private final double multa;
+    private final double desconto;
+    private final boolean podeRenovar;
 
-    int getLivrosMax() { return this.livrosMax; }
-    int getPrazoMax() { return this.prazoMax; }
-    double getMulta() { return this.multa; }
-    double getDesconto() { return this.desconto; }
-    boolean getPodeRenovar() { return this.podeRenovar; }
+    Categoria(int livrosMax, int prazoMax, double multa,
+              double desconto, boolean podeRenovar) {
+        this.livrosMax = livrosMax;
+        this.prazoMax = prazoMax;
+        this.multa = multa;
+        this.desconto = desconto;
+        this.podeRenovar = podeRenovar;
+    }
+
+    int getLivrosMax() { return livrosMax; }
+    int getPrazoMax() { return prazoMax; }
+    double getMulta() { return multa; }
+    double getDesconto() { return desconto; }
+    boolean getPodeRenovar() { return podeRenovar; }
+
+    double calcularMulta(int diasAtraso) {
+        return Math.max(0, diasAtraso) * multa * desconto;
+    }
+
+    double calcularMulta(int diasAtraso, double descontoAdicional) {
+        return calcularMulta(diasAtraso)
+            * (1 - descontoAdicional / 100);
+    }
 }
 
 final class Padrao extends Categoria {
-    private int livrosMax = 3;
-    private int prazoMax = 14;
-    private double multa = 2.0;
-    private boolean podeRenovar = false;
+    Padrao() {
+        super(3, 14, 2.00, 1.0, false);
+    }
 }
 
-class Premium extends Categoria {
-    private int livrosMax = 5;
-    private int prazoMax = 21;
-    private double multa = 1.5;
-    private boolean podeRenovar = true;
+final class Premium extends Categoria {
+    Premium() {
+        super(5, 21, 1.50, 1.0, true);
+    }
 }
 
-class VIP extends Categoria {
-    private int livrosMax = 10;
-    private int prazoMax = 30;
-    private double multa = 1.0;
-    private double discount = 0.8;
-    private boolean podeRenovar = true;
+final class VIP extends Categoria {
+    VIP() {
+        super(10, 30, 1.00, 0.8, true);
+    }
 }
