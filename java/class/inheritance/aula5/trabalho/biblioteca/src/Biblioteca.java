@@ -33,10 +33,14 @@ public class Biblioteca {
         Emprestimo emprestimoADevolver;
         for (Emprestimo emp : emprestimos) {
             if (emp.id() == emprestimo.id()) {
-                emprestimoADevolver = emprestimo;
+                emprestimoADevolver = emp;
             }
         }
-        emprestimoADevolver.livro().devolverCopia();
-        emprestimos.remove(emprestimoADevolver);
+        if (emprestimoADevolver != null) {
+            emprestimoADevolver.livro().devolverCopia();
+            emprestimos.remove(emprestimoADevolver);
+        } else {
+            throw new IllegalArgumentException("esse livro nao esta pendente para devolucao ou nao existe.");
+        }
     }
 }

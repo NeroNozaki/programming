@@ -22,7 +22,6 @@ public class Emprestimo {
         this.emprestimoData = emprestimoData;
         this.devData = emprestimoData.plusDays(membro.getCategoria().getPrazoMax());
         this.id = global_id++;
-        livro.emprestarCopia();
     }
 
     int renovarEmprestimo() {
@@ -30,7 +29,7 @@ public class Emprestimo {
             System.err.println("nao pode renovar");
             return 1;
         }
-        if (ChronoUnit.DAYS.between(dataAtual, devData) > 0) {
+        if (!dataAtual.isAfter(devData)) {
             devData = devData.plusDays(7);
         }
         return 0;
@@ -63,4 +62,5 @@ public class Emprestimo {
     }
 
     int id() { return id; }
+    Livro livro() { return livro; }
 }
