@@ -49,50 +49,14 @@ public class Biblioteca {
         membro.adicionarEmprestimo(emprestimo);
     }
 
-    private void checarDevolucao(Membro membro, Emprestimo emprestimo) {
-        if (membro.temMulta()) {
-            throw new IllegalArgumentException("nao pode devolver nenhum livro enquanto voce tem um emprestimo atrasado.");
-        }
-        if (!emprestimo.isAtivo()) {
-            throw new IllegalArgumentException("este emprestimo nao esta ativo.");
-        }
-        if (emprestimo.getMembro() != membro) {
-            throw new IllegalArgumentException("este emprestimo nao pertence a este membro.");
-        }
-        if (!membro.temEmprestimo(emprestimo)) {
-            throw new IllegalArgumentException("esse livro nao esta pendente para devolucao ou nao existe.");
-        }
-    }
-
     void devolverLivro(Membro membro, Emprestimo emprestimo) {
         checarDevolucao(membro, emprestimo);
         receberLivro(membro, emprestimo);
     }
 
-    void receberLivro(Membro membro, Emprestimo emprestimo) {
-        emprestimo.getLivro().devolverCopia();
-        emprestimo.finalizar();
-        membro.removerEmprestimo(emprestimo);
-        emprestimos.remove(emprestimo);
-        System.out.println("livro " + emprestimo.getLivro().getTitulo() + " foi devolvido");
-    }
-
-    void checarMulta(Membro membro, Emprestimo emprestimo) {
-        if (emprestimos.contains(emprestimo)) {
-            throw new IllegalArgumentException("emprestimo nao existe.");
-        }
-        if (!membro.temEmprestimo(emprestimo)) {
-            throw new IllegalArgumentException("emprestimo nao existe.");
-        }
-        if (!emprestimo.isAtivo()) {
-            throw new IllegalArgumentException("emprestimo ja foi encerrado.");
-        }
-        if (emprestimo.getMulta() <= 0) {
-            throw new IllegalArgumentException("este emprestimo nao esta atrasado.");
-        }
-    }
-
     void pagarMulta(Membro membro, Emprestimo emprestimo) {
+        checarMulta(membro, emprestimo);
+
         totalMultas += emprestimo.getMulta();
         System.out.print("multa foi paga e ");
         receberLivro(membro, emprestimo);
@@ -161,4 +125,50 @@ public class Biblioteca {
     }
 
     double getTotalMultas() { return totalMultas; }
+
+    private void receberLivro(Membro membro, Emprestimo emprestimo) {
+        emprestimo.getLivro().devolverCopia();
+        emprestimo.finalizar();
+        membro.removerEmprestimo(emprestimo);
+        emprestimos.remove(emprestimo);
+        System.out.println("livro " + emprestimo.getLivro().getTitulo() + " foi devolvido");
+    }
+
+    private void checarDevolucao(Membro membro, Emprestimo emprestimo) {
+        checarMembro(membro);
+        if (membro.temMulta()) {
+            throw new IllegalArgumentException("nao pode devolver nenhum livro enquanto voce tem um emprestimo atrasado.");
+        }
+        if (!emprestimo.isAtivo()) {
+            throw new IllegalArgumentException("este emprestimo nao esta ativo.");
+        }
+        if (emprestimo.getMembro() != membro) {
+            throw new IllegalArgumentException("este emprestimo nao pertence a este membro.");
+        }
+        if (!membro.temEmprestimo(emprestimo)) {
+            throw new IllegalArgumentException("esse livro nao esta pendente para devolucao ou nao existe.");
+        }
+    }
+
+    private void checarMulta(Membro membro, Emprestimo emprestimo) {
+        checarMembro(membro);
+        if (!emprestimos.contains(emprestimo)) {
+            throw new IllegalArgumentException("emprestimo nao existe.");
+        }
+        if (!membro.temEmprestimo(emprestimo)) {
+            throw new IllegalArgumentException("emprestimo nao existe.");
+        }
+        if (!emprestimo.isAtivo()) {
+            throw new IllegalArgumentException("emprestimo ja foi encerrado.");
+        }
+        if (emprestimo.getMulta() <= 0) {
+            throw new IllegalArgumentException("este emprestimo nao esta atrasado.");
+        }
+    }
+
+    private void checarMembro(Membro membro) {
+        if(!membros.contains(membro)) {
+            throw new IllegalArgumentException("este membro nao esta registrado.");
+        }
+    }
 }
