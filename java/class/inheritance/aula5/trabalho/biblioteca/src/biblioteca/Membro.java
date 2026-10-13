@@ -46,7 +46,7 @@ public class Membro {
 
     Categoria getCategoria() { return categoria; }
     boolean podeFazerEmprestimo() {
-        return emprestimos.size() >= categoria.getLivrosMax();
+        return emprestimos.size() < categoria.getLivrosMax();
     }
     String getNome() { return nome; }
     double getMultaTotal() {
@@ -57,7 +57,7 @@ public class Membro {
         return multaTotal;
     }
     boolean temMulta() {
-        if (getMultaTotal() >= 0) return true;
+        if (getMultaTotal() > 0) return true;
         return false;
     }
 
@@ -81,7 +81,9 @@ public class Membro {
     ArrayList<Livro> getAtrasos() {
         ArrayList<Livro> livros = new ArrayList<>();
         for (Emprestimo emprestimo : emprestimos) {
-            livros.add(emprestimo.getLivro());
+            if (emprestimo.getDiasAtraso() > 0) {
+                livros.add(emprestimo.getLivro());
+            }
         }
         return livros;
     }

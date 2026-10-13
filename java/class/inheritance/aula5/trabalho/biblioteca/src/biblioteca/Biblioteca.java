@@ -1,9 +1,6 @@
 package biblioteca;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -71,6 +68,7 @@ public class Biblioteca {
         checarDevolucao(membro, emprestimo);
         receberLivro(membro, emprestimo);
     }
+
     void receberLivro(Membro membro, Emprestimo emprestimo) {
         emprestimo.getLivro().devolverCopia();
         emprestimo.finalizar();
@@ -78,17 +76,28 @@ public class Biblioteca {
         emprestimos.remove(emprestimo);
         System.out.println("livro " + emprestimo.getLivro().getTitulo() + " foi devolvido");
     }
-    void pagarMulta(Membro membro, Emprestimo emprestimo) {
+
+    void checarMulta(Membro membro, Emprestimo emprestimo) {
+        if (emprestimos.contains(emprestimo)) {
+            throw new IllegalArgumentException("emprestimo nao existe.");
+        }
         if (!membro.temEmprestimo(emprestimo)) {
             throw new IllegalArgumentException("emprestimo nao existe.");
+        }
+        if (!emprestimo.isAtivo()) {
+            throw new IllegalArgumentException("emprestimo ja foi encerrado.");
         }
         if (emprestimo.getMulta() <= 0) {
             throw new IllegalArgumentException("este emprestimo nao esta atrasado.");
         }
+    }
+
+    void pagarMulta(Membro membro, Emprestimo emprestimo) {
         totalMultas += emprestimo.getMulta();
         System.out.print("multa foi paga e ");
         receberLivro(membro, emprestimo);
     }
+
     void renovarEmprestimo(Emprestimo emprestimo){
         if (!emprestimos.contains(emprestimo)) {
             throw new IllegalArgumentException("emprestimo nao existe");
@@ -96,6 +105,7 @@ public class Biblioteca {
         System.out.println("taxa de renovacao: " + emprestimo.calcularTaxaRenovacao());
         emprestimo.renovar(dataAtual);
     }
+
     void renovarEmprestimo(Emprestimo emprestimo, String cupom) {
         if (!emprestimos.contains(emprestimo)) {
             throw new IllegalArgumentException("emprestimo nao existe");
@@ -133,6 +143,7 @@ public class Biblioteca {
 
         return membrosPorCategoria;
     }
+
     int getNumEmprestimosAtivos() {
         int emprestimosAtivos = 0;
         for (Emprestimo emprestimo : emprestimos) {
@@ -140,12 +151,14 @@ public class Biblioteca {
         }
         return emprestimosAtivos;
     }
+
     int getNumEmprestmosAtrasados() {
         int emprestimosAtrasados = 0;
         for (Emprestimo emprestimo : emprestimos) {
-            if (emprestimo.getMulta() > 0) { emprestimosAtrasados++; }
+            if (emprestimo.getDiasAtraso() > 0) { emprestimosAtrasados++; }
         }
         return emprestimosAtrasados;
     }
+
     double getTotalMultas() { return totalMultas; }
 }
