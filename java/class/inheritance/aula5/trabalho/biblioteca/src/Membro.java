@@ -1,14 +1,17 @@
 package biblioteca;
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Membro {
     final private String nome;
     final private String email;
-    final private int cadastroData;
+    final private LocalDate cadastroData;
     private Categoria categoria;
     private final ArrayList<Emprestimo> emprestimos = new ArrayList<>();
+    private final ArrayList<Emprestimo> histEmprestimos = new ArrayList<>();
 
-    Membro(String nome, String email, int cadastroData, String categoria) {
+    Membro(String nome, String email, LocalDate cadastroData, String categoria) {
         setCategoria(categoria);
         this.nome = nome;
         this.email = email;
@@ -29,11 +32,18 @@ public class Membro {
             break;
             default:
             throw new IllegalArgumentException("categoria de membro invalida.");
-            return;
         }
     }
 
     Categoria getCategoria() { return categoria; }
 
     ArrayList<Emprestimo> getEmprestimos() { return emprestimos; }
+
+    void adicionarEmprestimo(Emprestimo emprestimo) {
+        emprestimos.add(emprestimo);
+    }
+
+    void adicionarHistEmprestimos(Emprestimo emprestimo) {
+        histEmprestimos.add(emprestimo);
+    }
 }

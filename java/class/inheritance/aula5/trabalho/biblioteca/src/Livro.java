@@ -18,7 +18,6 @@ class Livro {
             quantidadeDisponivel--;
         }
         else {
-            quantidadeDisponivel = 0;
             throw new IllegalStateException("livro fora de estoque.");
         }
     }
@@ -28,7 +27,6 @@ class Livro {
             quantidadeDisponivel++;
         }
         else {
-            quantidadeDisponivel = quantidadeTotal;
             throw new IllegalStateException("estoque cheio.");
         }
     }
@@ -36,4 +34,7 @@ class Livro {
     int getQuantidadeDisponivel() {
         return this.quantidadeDisponivel;
     }
+
+    String getTitulo() { return this.titulo; }
+    String getAutor() { return this.autor; }
 }

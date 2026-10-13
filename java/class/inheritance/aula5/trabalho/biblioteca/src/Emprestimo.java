@@ -1,16 +1,18 @@
 package biblioteca;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Emprestimo {
     static private int global_id = 1;
-    private int emprestimoData;
-    private int devData;
+    private LocalDate emprestimoData;
+    private LocalDate devData;
     private final int id;
     private Livro livro;
     private Membro membro;
     private boolean ativo = true;
-    private double taxaDev = 5.0;
+    private double taxaRenov = 5.0;
 
-    Emprestimo(Membro membro, Livro livro, int emprestimoData) {
+    Emprestimo(Membro membro, Livro livro, LocalDate emprestimoData) {
         if (membro.getEmprestimos().size() >= membro.getCategoria().getLivrosMax() || livro.getQuantidadeDisponivel() <= 0) {
             throw new IllegalArgumentException("emprestimo nao pode ser feito");
         }
@@ -18,22 +20,25 @@ public class Emprestimo {
         this.membro = membro;
         this.livro = livro;
         this.emprestimoData = emprestimoData;
-        this.devData = emprestimoData + membro.getCategoria().getPrazoMax();
+        this.devData = emprestimoData.plusDays(membro.getCategoria().getPrazoMax());
         this.id = global_id++;
+        livro.emprestarCopia();
     }
 
-    void renovarEmprestimo(Membro membro) {
-        if (!membro.getCategoria().getPodeRenovar()) {
+    int renovarEmprestimo() {
+        if (!this.membro.getCategoria().getPodeRenovar()) {
             System.err.println("nao pode renovar");
-            return;
+            return 1;
         }
-        if (devData >= emprestimoData) {
-            devData += 7;
+        if (ChronoUnit.DAYS.between(dataAtual, devData) > 0) {
+            devData = devData.plusDays(7);
         }
+        return 0;
     }
 
-    void renovarEmprestimo(Membro membro, String cupom) {
-        renovarEmprestimo(membro);
+    void renovarEmprestimo(String cupom) {
+        int result = renovarEmprestimo();
+        if (result == 1) return;
 
         double desconto;
 
@@ -49,6 +54,13 @@ public class Emprestimo {
                 break;
         }
 
-        this.taxaDev = this.taxaDev * desconto * membro.getCategoria().getDesconto();
+        this.taxaRenov = this.taxaRenov * desconto;
     }
+
+    void finalizarEmpresitmo() {
+        this.ativo = false;
+        membro.adicionarHistEmprestimos(this);
+    }
+
+    int id() { return id; }
 }

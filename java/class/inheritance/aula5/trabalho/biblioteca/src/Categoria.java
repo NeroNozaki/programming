@@ -5,7 +5,7 @@ abstract class Categoria {
     private final int livrosMax;
     private final int prazoMax;
     private final double multa;
-    private final double desconto;
+    private final double descontoMulta;
     private final boolean podeRenovar;
 
     Categoria(int livrosMax, int prazoMax, double multa,
@@ -13,18 +13,18 @@ abstract class Categoria {
         this.livrosMax = livrosMax;
         this.prazoMax = prazoMax;
         this.multa = multa;
-        this.desconto = desconto;
+        this.descontoMulta = desconto;
         this.podeRenovar = podeRenovar;
     }
 
     int getLivrosMax() { return livrosMax; }
     int getPrazoMax() { return prazoMax; }
     double getMulta() { return multa; }
-    double getDesconto() { return desconto; }
+    double getDescontoMulta() { return descontoMulta; }
     boolean getPodeRenovar() { return podeRenovar; }
 
     double calcularMulta(int diasAtraso) {
-        return Math.max(0, diasAtraso) * multa * desconto;
+        return Math.max(0, diasAtraso) * multa * descontoMulta;
     }
 
     double calcularMulta(int diasAtraso, double descontoAdicional) {
