@@ -34,18 +34,36 @@ abstract class Categoria {
 
 final class Padrao extends Categoria {
     Padrao() {
-        super(3, 14, 2.00, 1.0, false);
+        super(
+            3,    //livrosMax
+            14,   //prazoMax
+            2.00, //valorMulta
+            1.0,  //descontoMulta
+            false //podeRenovar
+        );
     }
 }
 
 final class Premium extends Categoria {
     Premium() {
-        super(5, 21, 1.50, 1.0, true);
+        super(
+            5,    //livrosMax
+            21,   //prazoMax
+            1.50, //valorMulta
+            1.0,  //descontoMulta
+            true  //podeRenovar
+        );
     }
 }
 
 final class VIP extends Categoria {
     VIP() {
-        super(10, 30, 1.00, 0.8, true);
+        super(
+            10,   //livrosMax
+            30,   //prazoMax
+            1.00, //valorMulta
+            0.8,  //descontoMulta
+            true  //podeRenovar
+        );
     }
 }

@@ -24,22 +24,28 @@ public class Emprestimo {
         this.id = global_id++;
     }
 
-    boolean renovar(LocalDate dataAtual) {
-        if (!ativo) return false;
-        if (!this.membro.getCategoria().getPodeRenovar()) {
-            System.err.println("nao pode renovar");
+    boolean podeRenovar(LocalDate dataAtual) {
+        if (!ativo){
+            System.err.println("nao pode renovar um emprestimo inativo.");
             return false;
         }
-        if (dataAtual.isAfter(devData)) return false;
-
-        devData = devData.plusDays(7);
+        if (!this.membro.getCategoria().getPodeRenovar()) {
+            System.err.println("sua categoria nao pode renovar emprestimos.");
+            return false;
+        }
+        if (dataAtual.isAfter(devData)) {
+            System.err.println("nao pode renovar um emprestimo atrasado.");
+            return false;
+        }
         return true;
     }
+    void renovar(LocalDate dataAtual) { 
+        if (podeRenovar(dataAtual)) { devData = devData.plusDays(7); }
+        else System.err.println("renovacao invalida.");
+    }
 
-    void renovar(LocalDate dataAtual, String cupom) {
-        boolean result = renovar(dataAtual);
-        if (!result) return;
-
+    double calcularTaxaRenovacao() { return this.taxaRenov; }
+    double calcularTaxaRenovacao(String cupom) {
         double desconto;
 
         switch (cupom) {
@@ -53,16 +59,14 @@ public class Emprestimo {
                 desconto = 1;
                 break;
         }
-        double valorAPagar = this.taxaRenov * desconto;
+        return this.taxaRenov * desconto;
     }
 
-    void finalizar() {
-        this.ativo = false;
-    }
+    void finalizar() { this.ativo = false; }
 
     double getMulta(LocalDate dataAtual) {
         long diasAtraso = Math.max(0, ChronoUnit.DAYS.between(devData, dataAtual));
-        return membro.getCategoria().calcularMulta(diasAtraso, membro.getCategoria().getDescontoMulta());
+        return membro.getCategoria().calcularMulta(diasAtraso);
     }
 
     int getId() { return id; }

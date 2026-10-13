@@ -1,7 +1,7 @@
 package biblioteca;
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+// import java.time.temporal.ChronoUnit;
 
 public class Membro {
     final private String nome;
@@ -51,5 +51,13 @@ public class Membro {
         for (Emprestimo emprestimo : emprestimos) {
             if (emprestimo.getMulta(dataAtual) != 0) return true;
         }
+        return false;
+    }
+
+    boolean temEmprestimo(Emprestimo emprestimo) {
+        for (Emprestimo emp : emprestimos) {
+            if (emp.getId() == emprestimo.getId()) return true;
+        }
+        return false;
     }
 }
