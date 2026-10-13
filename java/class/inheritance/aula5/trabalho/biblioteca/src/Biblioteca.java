@@ -15,12 +15,12 @@ public class Biblioteca {
         this.dataAtual = dataInicial;
     }
 
+    LocalDate getDataAtual() { return dataAtual; }
+    void avancarDia() { dataAtual = dataAtual.plusDays(1); }
+
     void registrarLivro(String titulo, String autor, int quantidadeTotal) {
         livros.add(new Livro(titulo, autor, quantidadeTotal));
     }
-
-    LocalDate getDataAtual() { return dataAtual; }
-    void avancarDia() { dataAtual = dataAtual.plusDays(1); }
 
     void emprestarLivro(Membro membro, Livro livro) {
         livro.emprestarCopia();
@@ -28,19 +28,28 @@ public class Biblioteca {
         emprestimos.add(emprestimo);
         membro.adicionarEmprestimo(emprestimo); 
     }
-    
-    void devolverLivro(Membro membro, Emprestimo emprestimo) {
-        Emprestimo emprestimoADevolver;
+
+    void receberLivro(Membro membro, Emprestimo emprestimo) {
+        if (!emprestimo.isAtivo()) {
+            throw new IllegalArgumentException("este emprestimo nao esta ativo.");
+        }
+        if (emprestimo.getMembro() != membro) {
+            throw new IllegalArgumentException("este emprestimo nao pertence a este membro.");
+        }
+        Emprestimo registrado = null;
         for (Emprestimo emp : emprestimos) {
-            if (emp.id() == emprestimo.id()) {
-                emprestimoADevolver = emp;
+            if (emp.getId() == emprestimo.getId()) {
+                registrado = emp;
+                break;
             }
         }
-        if (emprestimoADevolver != null) {
-            emprestimoADevolver.livro().devolverCopia();
-            emprestimos.remove(emprestimoADevolver);
-        } else {
+        if (registrado == null) {
             throw new IllegalArgumentException("esse livro nao esta pendente para devolucao ou nao existe.");
         }
+
+        registrado.getLivro().devolverCopia();
+        registrado.finalizar();
+        membro.removerEmprestimo(registrado);
+        emprestimos.remove(registrado);
     }
 }

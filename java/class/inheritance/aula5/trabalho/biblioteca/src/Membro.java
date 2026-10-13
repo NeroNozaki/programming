@@ -36,14 +36,14 @@ public class Membro {
     }
 
     Categoria getCategoria() { return categoria; }
-
     ArrayList<Emprestimo> getEmprestimos() { return emprestimos; }
-
+    String getNome() { return nome; }
     void adicionarEmprestimo(Emprestimo emprestimo) {
         emprestimos.add(emprestimo);
     }
 
-    void adicionarHistEmprestimos(Emprestimo emprestimo) {
+    void removerEmprestimo(Emprestimo emprestimo) {
+        emprestimos.remove(emprestimo);
         histEmprestimos.add(emprestimo);
     }
 }

@@ -24,20 +24,20 @@ public class Emprestimo {
         this.id = global_id++;
     }
 
-    int renovarEmprestimo() {
+    boolean renovar(LocalDate dataAtual) {
         if (!this.membro.getCategoria().getPodeRenovar()) {
             System.err.println("nao pode renovar");
-            return 1;
+            return false;
         }
         if (!dataAtual.isAfter(devData)) {
             devData = devData.plusDays(7);
         }
-        return 0;
+        return true;
     }
 
-    void renovarEmprestimo(String cupom) {
-        int result = renovarEmprestimo();
-        if (result == 1) return;
+    void renovar(LocalDate dataAtual, String cupom) {
+        boolean result = renovar(dataAtual);
+        if (result) return;
 
         double desconto;
 
@@ -56,11 +56,13 @@ public class Emprestimo {
         this.taxaRenov = this.taxaRenov * desconto;
     }
 
-    void finalizarEmpresitmo() {
+    void finalizar() {
         this.ativo = false;
         membro.adicionarHistEmprestimos(this);
     }
 
-    int id() { return id; }
-    Livro livro() { return livro; }
+    int getId() { return id; }
+    Livro getLivro() { return livro; }
+    boolean isAtivo() { return ativo; }
+    Membro getMembro() { return membro; }
 }
