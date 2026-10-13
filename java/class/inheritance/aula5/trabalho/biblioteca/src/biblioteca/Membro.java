@@ -16,6 +16,8 @@ public class Membro {
         this.nome = nome;
         this.email = email;
         this.cadastroData = cadastroData;
+        System.out.println("\nMembro registrado!");
+        this.resumo();
     }
 
     void setCategoria(String categoria) {
@@ -44,6 +46,12 @@ public class Membro {
         emprestimos.remove(emprestimo);
     }
 
+    Emprestimo getEmprestimo(Livro livro) {
+        for (Emprestimo emprestimo : emprestimos) {
+            if (emprestimo.getLivro() == livro) return emprestimo;
+        }
+        throw new IllegalArgumentException("este livro nao foi emprestado.");
+    }
     Categoria getCategoria() { return categoria; }
     boolean podeFazerEmprestimo() {
         return emprestimos.size() < categoria.getLivrosMax();

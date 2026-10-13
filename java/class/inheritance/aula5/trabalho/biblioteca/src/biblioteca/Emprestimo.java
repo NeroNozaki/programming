@@ -12,7 +12,6 @@ public class Emprestimo {
     private Membro membro;
     private boolean ativo = true;
     private final double taxaRenov = 5.0;
-    private double tavaRenovAtual = 5.0;
 
     Emprestimo(Membro membro, Livro livro, LocalDate emprestimoData) {
         if (!membro.podeFazerEmprestimo()) {
@@ -27,6 +26,8 @@ public class Emprestimo {
         this.emprestimoData = emprestimoData;
         this.devData = emprestimoData.plusDays(membro.getCategoria().getPrazoMax());
         this.id = global_id++;
+        System.out.println("\nEmprestimo feito!");
+        this.exibir();
     }
 
     boolean podeRenovar(LocalDate dataAtual) {
@@ -52,7 +53,10 @@ public class Emprestimo {
         else System.err.println("renovacao invalida.");
     }
 
-    double calcularTaxaRenovacao() { return this.taxaRenov; }
+    double calcularTaxaRenovacao() {
+        System.out.println("taxa de renovacao: R$ " + this.taxaRenov);
+        return this.taxaRenov; 
+    }
     double calcularTaxaRenovacao(String cupom) {
         double desconto;
 
@@ -67,6 +71,8 @@ public class Emprestimo {
                 desconto = 1;
                 break;
         }
+
+        System.out.println("taxa de renovacao com cupom " + cupom + ": R$ " + calcularTaxaRenovacao(cupom));
         return this.taxaRenov * desconto;
     }
 

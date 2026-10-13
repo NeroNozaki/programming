@@ -25,14 +25,18 @@ public class Biblioteca {
         for (int i = 0; i < dias; i++) { avancarDia(); }
     }
 
-    void registrarMembro(String nome, String email, String categoria) {
-        membros.add(new Membro(nome, email, dataAtual, categoria));
+    Membro registrarMembro(String nome, String email, String categoria) {
+        Membro m = new Membro(nome, email, dataAtual, categoria);
+        membros.add(m);
+        return m;
     }
     void registrarMembro(Membro membro) {
         membros.add(membro);
     }
-    void registrarLivro(String titulo, String autor, int quantidadeTotal) {
-        livros.add(new Livro(titulo, autor, quantidadeTotal));
+    Livro registrarLivro(String titulo, String autor, int quantidadeTotal) {
+        Livro l = new Livro(titulo, autor, quantidadeTotal);
+        livros.add(l);
+        return l;
     }
     void registrarLivro(Livro livro) { livros.add(livro); }
 
@@ -66,7 +70,7 @@ public class Biblioteca {
         if (!emprestimos.contains(emprestimo)) {
             throw new IllegalArgumentException("emprestimo nao existe");
         }
-        System.out.println("taxa de renovacao: " + emprestimo.calcularTaxaRenovacao());
+        emprestimo.calcularTaxaRenovacao();
         emprestimo.renovar(dataAtual);
     }
 
@@ -74,8 +78,7 @@ public class Biblioteca {
         if (!emprestimos.contains(emprestimo)) {
             throw new IllegalArgumentException("emprestimo nao existe");
         }
-        double taxaRenov = emprestimo.calcularTaxaRenovacao(cupom);
-        System.out.println("taxa de renovacao: " + taxaRenov);
+        emprestimo.calcularTaxaRenovacao(cupom);
         emprestimo.renovar(dataAtual);
     }
 
