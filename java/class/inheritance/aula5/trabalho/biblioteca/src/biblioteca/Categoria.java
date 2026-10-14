@@ -16,11 +16,29 @@ abstract class Categoria {
         this.podeRenovar = podeRenovar;
     }
 
-    int getLivrosMax() { return livrosMax; }
-    int getPrazoMax() { return prazoMax; }
-    double getValorMulta() { return valorMulta; }
-    double getDescontoMulta() { return descontoMulta; }
-    boolean getPodeRenovar() { return podeRenovar; }
+    // Consultas dos parâmetros da categoria
+
+    int getLivrosMax() {
+        return livrosMax;
+    }
+
+    int getPrazoMax() {
+        return prazoMax;
+    }
+
+    double getValorMulta() {
+        return valorMulta;
+    }
+
+    double getDescontoMulta() {
+        return descontoMulta;
+    }
+
+    boolean getPodeRenovar() {
+        return podeRenovar;
+    }
+
+    // Cálculo de multas
 
     double calcularMulta(long diasAtraso) {
         return Math.max(0, diasAtraso) * valorMulta * descontoMulta;
@@ -35,11 +53,11 @@ abstract class Categoria {
 final class Padrao extends Categoria {
     Padrao() {
         super(
-            3,    //livrosMax
-            14,   //prazoMax
-            2.00, //valorMulta
-            1.0,  //descontoMulta
-            false //podeRenovar
+            3,    // livrosMax
+            14,   // prazoMax
+            2.00, // valorMulta
+            1.0,  // descontoMulta
+            false // podeRenovar
         );
     }
 
@@ -52,11 +70,11 @@ final class Padrao extends Categoria {
 final class Premium extends Categoria {
     Premium() {
         super(
-            5,    //livrosMax
-            21,   //prazoMax
-            1.50, //valorMulta
-            1.0,  //descontoMulta
-            true  //podeRenovar
+            5,    // livrosMax
+            21,   // prazoMax
+            1.50, // valorMulta
+            1.0,  // descontoMulta
+            true  // podeRenovar
         );
     }
 
@@ -69,11 +87,11 @@ final class Premium extends Categoria {
 final class VIP extends Categoria {
     VIP() {
         super(
-            10,   //livrosMax
-            30,   //prazoMax
-            1.00, //valorMulta
-            0.8,  //descontoMulta
-            true  //podeRenovar
+            10,   // livrosMax
+            30,   // prazoMax
+            1.00, // valorMulta
+            0.8,  // descontoMulta
+            true  // podeRenovar
         );
     }
 
