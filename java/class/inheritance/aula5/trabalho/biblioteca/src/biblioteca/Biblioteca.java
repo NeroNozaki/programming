@@ -1,8 +1,9 @@
 package biblioteca;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Biblioteca {
     private LocalDate dataAtual;
@@ -15,30 +16,48 @@ public class Biblioteca {
         this.dataAtual = dataInicial;
     }
 
+    // Gerenciamento da data atual
+
     void avancarDia() {
         dataAtual = dataAtual.plusDays(1);
         for (Emprestimo emprestimo : emprestimos) {
             emprestimo.atualizarAtraso(dataAtual);
         }
     }
+
     void avancarDias(int dias) {
-        for (int i = 0; i < dias; i++) { avancarDia(); }
+        for (int i = 0; i < dias; i++) {
+            avancarDia();
+        }
     }
+
+    LocalDate getDataAtual() {
+        return dataAtual;
+    }
+
+    // Cadastro de membros e livros
 
     Membro registrarMembro(String nome, String email, String categoria) {
         Membro m = new Membro(nome, email, dataAtual, categoria);
         membros.add(m);
         return m;
     }
+
     void registrarMembro(Membro membro) {
         membros.add(membro);
     }
+
     Livro registrarLivro(String titulo, String autor, int quantidadeTotal) {
         Livro l = new Livro(titulo, autor, quantidadeTotal);
         livros.add(l);
         return l;
     }
-    void registrarLivro(Livro livro) { livros.add(livro); }
+
+    void registrarLivro(Livro livro) {
+        livros.add(livro);
+    }
+
+    // Operações de empréstimo
 
     void emprestarLivro(Membro membro, Livro livro) {
         if (!membros.contains(membro)) {
@@ -47,6 +66,7 @@ public class Biblioteca {
         if (!livros.contains(livro)) {
             throw new IllegalArgumentException("nao possuimos este livro.");
         }
+
         Emprestimo emprestimo = new Emprestimo(membro, livro, dataAtual);
         livro.emprestarCopia();
         emprestimos.add(emprestimo);
@@ -66,7 +86,7 @@ public class Biblioteca {
         receberLivro(emprestimo);
     }
 
-    void renovarEmprestimo(Emprestimo emprestimo){
+    void renovarEmprestimo(Emprestimo emprestimo) {
         if (!emprestimos.contains(emprestimo)) {
             throw new IllegalArgumentException("emprestimo nao existe");
         }
@@ -79,27 +99,30 @@ public class Biblioteca {
         if (!emprestimos.contains(emprestimo)) {
             throw new IllegalArgumentException("emprestimo nao existe");
         }
+
         emprestimo.calcularTaxaRenovacao(cupom);
         emprestimo.renovar(dataAtual);
     }
 
-    LocalDate getDataAtual() { return dataAtual; }
+    // Consultas e relatórios
+
     private HashMap<String, Integer> getNumMembros() {
         HashMap<String, Integer> membrosPorCategoria = new HashMap<>();
         int padrao = 0;
         int premium = 0;
         int vip = 0;
+
         for (Membro membro : membros) {
-            switch(membro.getCategoria()) {
+            switch (membro.getCategoria()) {
                 case Padrao p:
                     padrao++;
-                break;
+                    break;
                 case Premium p:
                     premium++;
-                break;
+                    break;
                 case VIP v:
                     vip++;
-                break;
+                    break;
                 default:
                     throw new IllegalStateException("categoria desconhecida.");
             }
@@ -123,7 +146,9 @@ public class Biblioteca {
     int getNumEmprestimosAtivos() {
         int emprestimosAtivos = 0;
         for (Emprestimo emprestimo : emprestimos) {
-            if (emprestimo.isAtivo()) { emprestimosAtivos++; }
+            if (emprestimo.isAtivo()) {
+                emprestimosAtivos++;
+            }
         }
         return emprestimosAtivos;
     }
@@ -131,12 +156,18 @@ public class Biblioteca {
     int getNumEmprestmosAtrasados() {
         int emprestimosAtrasados = 0;
         for (Emprestimo emprestimo : emprestimos) {
-            if (emprestimo.getDiasAtraso() > 0) { emprestimosAtrasados++; }
+            if (emprestimo.getDiasAtraso() > 0) {
+                emprestimosAtrasados++;
+            }
         }
         return emprestimosAtrasados;
     }
 
-    double getTotalMultas() { return totalMultas; }
+    double getTotalMultas() {
+        return totalMultas;
+    }
+
+    // Métodos auxiliares privados
 
     private void receberLivro(Emprestimo emprestimo) {
         Membro membro = emprestimo.getMembro();
@@ -179,7 +210,7 @@ public class Biblioteca {
     }
 
     private void checarMembro(Membro membro) {
-        if(!membros.contains(membro)) {
+        if (!membros.contains(membro)) {
             throw new IllegalArgumentException("este membro nao esta registrado.");
         }
     }
