@@ -1,9 +1,11 @@
 package biblioteca;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class Emprestimo {
-    static private int global_id = 1;
+    private static int global_id = 1;
+
     private LocalDate emprestimoData;
     private long diasAtraso;
     private LocalDate devData;
@@ -30,37 +32,34 @@ public class Emprestimo {
         this.exibir();
     }
 
-    private boolean podeRenovar(LocalDate dataAtual) {
-        if (!ativo){
-            System.err.println("nao pode renovar um emprestimo inativo.");
-            return false;
-        }
-        if (!this.membro.getCategoria().getPodeRenovar()) {
-            System.err.println("sua categoria nao pode renovar emprestimos.");
-            return false;
-        }
-        if (dataAtual.isAfter(devData)) {
-            System.err.println("nao pode renovar um emprestimo atrasado.");
-            return false;
-        }
-        return true;
-    }
+    // Operações que alteram o estado do empréstimo
+
     void renovar(LocalDate dataAtual) {
         System.out.println();
         if (podeRenovar(dataAtual)) {
             devData = devData.plusDays(7);
             System.out.println("Renovacao feita!");
             System.out.println("Nova data de devolucao: " + devData);
-        }
-        else {
+        } else {
             throw new IllegalStateException();
         }
     }
 
+    void finalizar() {
+        this.ativo = false;
+    }
+
+    void atualizarAtraso(LocalDate dataAtual) {
+        this.diasAtraso = Math.max(0, ChronoUnit.DAYS.between(devData, dataAtual));
+    }
+
+    // Cálculos de taxas e multas
+
     double calcularTaxaRenovacao() {
         System.out.println("taxa de renovacao: R$ " + this.taxaRenov);
-        return this.taxaRenov; 
+        return this.taxaRenov;
     }
+
     double calcularTaxaRenovacao(String cupom) {
         double desconto;
 
@@ -81,25 +80,37 @@ public class Emprestimo {
         return taxa;
     }
 
-    void finalizar() { this.ativo = false; }
-
-    void atualizarAtraso(LocalDate dataAtual){
-        this.diasAtraso = Math.max(0, ChronoUnit.DAYS.between(devData, dataAtual));
-    }
     double getMulta() {
         return membro.getCategoria().calcularMulta(diasAtraso);
     }
+
     double getMulta(int desconto) {
         return membro.getCategoria().calcularMulta(diasAtraso, desconto);
     }
 
-    int getId() { return id; }
-    Livro getLivro() { return livro; }
-    boolean isAtivo() { return ativo; }
-    Membro getMembro() { return membro; }
+    // Consultas dos dados do empréstimo
+
+    int getId() {
+        return id;
+    }
+
+    Livro getLivro() {
+        return livro;
+    }
+
+    boolean isAtivo() {
+        return ativo;
+    }
+
+    Membro getMembro() {
+        return membro;
+    }
+
     long getDiasAtraso() {
         return this.diasAtraso;
     }
+
+    // Exibição
 
     void exibir() {
         System.out.println();
@@ -111,5 +122,23 @@ public class Emprestimo {
         System.out.println("Dias de atraso: " + diasAtraso);
         System.out.println("Multa atual: R$ " + getMulta());
         System.out.println();
+    }
+
+    // Validação auxiliar
+
+    private boolean podeRenovar(LocalDate dataAtual) {
+        if (!ativo) {
+            System.err.println("nao pode renovar um emprestimo inativo.");
+            return false;
+        }
+        if (!this.membro.getCategoria().getPodeRenovar()) {
+            System.err.println("sua categoria nao pode renovar emprestimos.");
+            return false;
+        }
+        if (dataAtual.isAfter(devData)) {
+            System.err.println("nao pode renovar um emprestimo atrasado.");
+            return false;
+        }
+        return true;
     }
 }
