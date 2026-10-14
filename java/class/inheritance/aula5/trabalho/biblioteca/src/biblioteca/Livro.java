@@ -10,17 +10,19 @@ class Livro {
         if (quantidadeTotal <= 0) {
             throw new IllegalArgumentException("quantidade do livro nao pode ser menor que 1.");
         }
+
         this.titulo = titulo;
         this.autor = autor;
         this.quantidadeTotal = quantidadeTotal;
         this.quantidadeDisponivel = this.quantidadeTotal;
     }
 
+    // Controle de estoque
+
     void emprestarCopia() {
         if (quantidadeDisponivel > 0) {
             quantidadeDisponivel--;
-        }
-        else {
+        } else {
             throw new IllegalStateException("livro fora de estoque.");
         }
     }
@@ -28,16 +30,22 @@ class Livro {
     void devolverCopia() {
         if (quantidadeDisponivel < quantidadeTotal) {
             quantidadeDisponivel++;
-        }
-        else {
+        } else {
             throw new IllegalStateException("estoque cheio.");
         }
+    }
+
+    // Consultas dos dados do livro
+
+    String getTitulo() {
+        return this.titulo;
+    }
+
+    String getAutor() {
+        return this.autor;
     }
 
     int getQuantidadeDisponivel() {
         return this.quantidadeDisponivel;
     }
-
-    String getTitulo() { return this.titulo; }
-    String getAutor() { return this.autor; }
 }
